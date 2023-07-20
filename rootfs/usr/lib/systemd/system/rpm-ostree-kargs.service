@@ -1,0 +1,25 @@
+[Unit]
+Description=Change kernel boot parameters with rpm-ostree
+ConditionPathExists=!/var/lib/%N.stamp
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/rpm-ostree kargs \
+    --append-if-missing=slab_nomerge \
+    --append-if-missing=init_on_alloc=1 --append-if-missing=init_on_free=1 \
+    --append-if-missing=page_alloc.shuffle=1 \
+    --append-if-missing=pti=on \
+    --append-if-missing=randomize_kstack_offset=on \
+    --append-if-missing=vsyscall=none \
+    --append-if-missing=debugfs=off \
+    --append-if-missing=oops=panic \
+    --append-if-missing=module.sig_enforce=1 \
+    --append-if-missing=lockdown=confidentiality \
+    --append-if-missing=mce=0 \
+    --append-if-missing=quiet --append-if-missing=loglevel=0 \
+    --append-if-missing=intel_iommu=on --append-if-missing=amd_iommu=on
+ExecStart=/bin/touch /var/lib/%N.stamp
+
+[Install]
+WantedBy=multi-user.target
