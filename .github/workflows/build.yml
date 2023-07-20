@@ -1,0 +1,175 @@
+name: Build image
+
+on:
+  schedule:
+    - cron: '20 10 * * *'  # 10:20pm everyday
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - 'README*'
+      - '*.md'
+      - '*.png'
+      - '*.txt'
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'README*'
+      - '*.md'
+      - '*.png'
+      - '*.txt'
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: ${{ github.event.repository.name }}
+  GITHUB_USERNAME: ${{ github.repository_owner }}
+  GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        major_version: [37, 38]
+        include:
+          - major_version: 37
+            is_latest: false
+            is_stable: false
+          - major_version: 38
+            is_latest: true
+            is_stable: true
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log into GitHub registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ env.GITHUB_USERNAME }}
+          password: ${{ env.GITHUB_PASSWORD }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/${{ env.GITHUB_USERNAME }}/${{ env.IMAGE_NAME }}
+          flavor: |
+            latest=false
+          tags: |
+            type=semver,pattern={{version}}
+            type=sha,prefix=sha256-
+
+      - name: Extract Docker PR tag
+        if: github.event_name == 'pull_request'
+        id: meta_pr
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/${{ env.GITHUB_USERNAME }}/${{ env.IMAGE_NAME }}
+          flavor: |
+            latest=false
+          tags: |
+            type=ref,suffix=-${{ matrix.major_version }},event=pr
+
+      - name: Extract Docker date tag
+        if: github.event_name == 'schedule'
+        id: meta_date
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/${{ env.GITHUB_USERNAME }}/${{ env.IMAGE_NAME }}
+          flavor: |
+            latest=false
+          tags: |
+            type=schedule,prefix=${{ matrix.major_version }}-,pattern={{date 'YYYYMMDD'}}
+
+      - name: Extract Docker major version tag
+        if: |
+          github.event_name != 'pull_request' && matrix.major_version != ''
+        id: meta_version
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/${{ env.GITHUB_USERNAME }}/${{ env.IMAGE_NAME }}
+          flavor: |
+            latest=false
+          tags: |
+            type=raw,value=${{ matrix.major_version }}
+
+      - name: Extract Docker stable tag
+        if: |
+          github.event_name != 'pull_request' && matrix.is_stable == true
+        id: meta_stable
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/${{ env.GITHUB_USERNAME }}/${{ env.IMAGE_NAME }}
+          flavor: |
+            latest=false
+          tags: |
+            type=schedule,pattern={{date 'YYYYMMDD'}}
+            type=raw,value=stable
+
+      - name: Extract Docker latest tag
+        if: |
+          github.event_name != 'pull_request' && matrix.is_latest == true
+        id: meta_latest
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/${{ env.GITHUB_USERNAME }}/${{ env.IMAGE_NAME }}
+          flavor: |
+            latest=false
+          tags: |
+            type=raw,value=latest
+
+      - name: Build Image
+        id: build_image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          containerfiles: |
+            ./Containerfile
+          tags: |
+            ${{ steps.meta.outputs.tags }}
+            ${{ steps.meta_pr.outputs.tags }}
+            ${{ steps.meta_date.outputs.tags }}
+            ${{ steps.meta_version.outputs.tags }}
+            ${{ steps.meta_stable.outputs.tags }}
+            ${{ steps.meta_latest.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            FEDORA_MAJOR_VERSION=${{ matrix.major_version }}
+          oci: true
+
+      - name: Push to container registries
+        uses: redhat-actions/push-to-registry@v2
+        id: push
+        with:
+          tags: ${{ steps.build_image.outputs.tags }}
+          extra-args: |
+            --disable-content-trust
+
+      # Sign container
+      - uses: sigstore/cosign-installer@v2
+
+      - name: Sign container image
+        run: |
+          cosign sign --key env://COSIGN_PRIVATE_KEY ghcr.io/${{ env.GITHUB_USERNAME }}/${{ env.IMAGE_NAME }}@${TAGS}
+        env:
+          TAGS: ${{ steps.push.outputs.digest }}
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_KEY }}
+          COSIGN_EXPERIMENTAL: false
+
+      - name: Echo outputs
+        run: |
+          echo "${{ toJSON(steps.push.outputs) }}"
