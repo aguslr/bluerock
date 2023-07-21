@@ -18,6 +18,7 @@ Features
 - Set additional kernel runtime parameters.
 - Blacklist rarely used kernel modules.
 - Replace Firefox with Chromium.
+- Install and enable [USBGuard][5].
 
 Verification
 ------------
@@ -39,3 +40,4 @@ References
 [2]: https://madaidans-insecurities.github.io/guides/linux-hardening.html
 [3]: https://wiki.archlinux.org/title/Security
 [4]: https://docs.sigstore.dev/cosign/overview/
+[5]: https://github.com/USBGuard/usbguard
