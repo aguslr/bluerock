@@ -13,7 +13,7 @@ Usage
 Features
 --------
 
-- Start with a custom Fedora Silverblue image.
+- Start with a base Fedora Silverblue image.
 - Set additional kernel boot parameters.
 - Set additional kernel runtime parameters.
 - Blacklist rarely used kernel modules.
