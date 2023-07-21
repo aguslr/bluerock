@@ -18,7 +18,8 @@ ExecStart=/usr/bin/rpm-ostree kargs \
     --append-if-missing=lockdown=confidentiality \
     --append-if-missing=mce=0 \
     --append-if-missing=quiet --append-if-missing=loglevel=0 \
-    --append-if-missing=intel_iommu=on --append-if-missing=amd_iommu=on
+    --append-if-missing=intel_iommu=on --append-if-missing=amd_iommu=on \
+    --append-if-missing=random.trust_cpu=off
 ExecStart=/bin/touch /var/lib/%N.stamp
 
 [Install]
