@@ -23,8 +23,9 @@ on:
 
 env:
   IMAGE_NAME: ${{ github.event.repository.name }}
-  GITHUB_USERNAME: ${{ github.repository_owner }}
-  GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+  REGISTRY_URL: ghcr.io
+  REGISTRY_USERNAME: ${{ github.repository_owner }}
+  REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   build:
@@ -47,19 +48,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Log into GitHub registry
+      - name: Log into registry
         uses: docker/login-action@v2
         with:
-          registry: ghcr.io
-          username: ${{ env.GITHUB_USERNAME }}
-          password: ${{ env.GITHUB_PASSWORD }}
+          registry: ${{ env.REGISTRY_URL }}
+          username: ${{ env.REGISTRY_USERNAME }}
+          password: ${{ env.REGISTRY_PASSWORD }}
 
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v4
         with:
           images: |
-            ghcr.io/${{ env.GITHUB_USERNAME }}/${{ env.IMAGE_NAME }}
+            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}
           flavor: |
             latest=false
           tags: |
@@ -72,7 +73,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ghcr.io/${{ env.GITHUB_USERNAME }}/${{ env.IMAGE_NAME }}
+            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}
           flavor: |
             latest=false
           tags: |
@@ -84,7 +85,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ghcr.io/${{ env.GITHUB_USERNAME }}/${{ env.IMAGE_NAME }}
+            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}
           flavor: |
             latest=false
           tags: |
@@ -97,7 +98,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ghcr.io/${{ env.GITHUB_USERNAME }}/${{ env.IMAGE_NAME }}
+            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}
           flavor: |
             latest=false
           tags: |
@@ -110,7 +111,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ghcr.io/${{ env.GITHUB_USERNAME }}/${{ env.IMAGE_NAME }}
+            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}
           flavor: |
             latest=false
           tags: |
@@ -124,7 +125,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ghcr.io/${{ env.GITHUB_USERNAME }}/${{ env.IMAGE_NAME }}
+            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}
           flavor: |
             latest=false
           tags: |
@@ -156,12 +157,12 @@ jobs:
           extra-args: |
             --disable-content-trust
 
-      # Sign container
-      - uses: sigstore/cosign-installer@v2
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v2
 
       - name: Sign container image
         run: |
-          cosign sign --key env://COSIGN_PRIVATE_KEY ghcr.io/${{ env.GITHUB_USERNAME }}/${{ env.IMAGE_NAME }}@${TAGS}
+          cosign sign --key env://COSIGN_PRIVATE_KEY ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}@${TAGS}
         env:
           TAGS: ${{ steps.push.outputs.digest }}
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_KEY }}
