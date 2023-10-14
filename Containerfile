@@ -6,7 +6,8 @@ FROM quay.io/fedora-ostree-desktops/silverblue:${FEDORA_MAJOR_VERSION}
 COPY rootfs/ /
 
 RUN systemctl enable rpm-ostree-kargs.service && \
-    rpm-ostree install chromium haveged && \
+    rpm-ostree install chromium haveged usbguard && \
     rpm-ostree override remove firefox firefox-langpacks && \
     rpm-ostree cleanup -m && \
+    systemctl enable usbguard.service && \
     ostree container commit
