@@ -1,0 +1,15 @@
+[Unit]
+Description=Restrict users to only see their own processes
+Documentation=https://github.com/Whonix/security-misc
+DefaultDependencies=no
+Before=sysinit.target
+Requires=local-fs.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/mount -o remount,nosuid,nodev,noexec,hidepid=2,gid=adm /proc
+RemainAfterExit=yes
+
+[Install]
+WantedBy=sysinit.target

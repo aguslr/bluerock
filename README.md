@@ -18,6 +18,7 @@ Features
 - Set additional kernel runtime parameters.
 - Blacklist rarely used kernel modules.
 - Replace Firefox with Chromium.
+- Restrict users to only see their own processes.
 
 Verification
 ------------
