@@ -14,6 +14,7 @@ Features
 --------
 
 - Start with a custom Fedora Silverblue image.
+- Set automatic updates for the system.
 - Set additional kernel boot parameters.
 - Set additional kernel runtime parameters.
 - Blacklist rarely used kernel modules.

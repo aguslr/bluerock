@@ -6,6 +6,7 @@ COPY rootfs/ /
 
 RUN systemctl enable rpm-ostree-kargs.service && \
     systemctl enable flatpak-replace-flathub-repo.service && \
+    sed -i 's/#AutomaticUpdatePolicy.*/AutomaticUpdatePolicy=stage/' /etc/rpm-ostreed.conf && \
     rpm-ostree install chromium haveged && \
     rpm-ostree override remove firefox firefox-langpacks && \
     rpm-ostree cleanup -m && \
