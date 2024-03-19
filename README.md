@@ -16,6 +16,15 @@ Usage
 
        rpm-ostree rebase ostree-image-signed:docker://ghcr.io/aguslr/bluerock:latest && systemctl reboot
 
+Alternatively, an [ISO file for offline installation][5] can be generated with
+the following command:
+
+    sudo podman run --rm --privileged --volume .:/isogenerator/output \
+        --security-opt label=disable --pull=newer \
+        -e IMAGE_REPO="ghcr.iso/aguslr" -e IMAGE_NAME="bluerock" \
+        -e IMAGE_TAG="latest" -e VARIANT="Silverblue" \
+        ghcr.io/ublue-os/isogenerator:39
+
 Features
 --------
 
@@ -47,3 +56,4 @@ References
 [2]: https://madaidans-insecurities.github.io/guides/linux-hardening.html
 [3]: https://wiki.archlinux.org/title/Security
 [4]: https://docs.sigstore.dev/cosign/overview/
+[5]: https://blue-build.org/learn/universal-blue/#fresh-install-from-an-iso
