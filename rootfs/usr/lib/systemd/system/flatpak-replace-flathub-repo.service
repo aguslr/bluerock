@@ -1,5 +1,6 @@
 [Unit]
 Description=Replace Flathub flatpak repository
+ConditionPathExists=/var/lib/flatpak/.flathub-apps-initialized
 ConditionPathExists=!/var/lib/flatpak/.flathub-repo-verified
 After=flatpak-replace-fedora-apps.service
 
