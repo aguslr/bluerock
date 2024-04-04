@@ -9,5 +9,6 @@ RUN systemctl enable flatpak-replace-flathub-repo.service && \
     systemctl enable rpm-ostree-kargs.service && \
     rpm-ostree override remove firefox firefox-langpacks --install chromium && \
     rpm-ostree install haveged && \
+    systemctl enable haveged.service && \
     rpm-ostree cleanup -m && \
     ostree container commit
