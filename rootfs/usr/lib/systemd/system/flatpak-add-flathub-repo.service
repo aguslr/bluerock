@@ -1,0 +1,18 @@
+[Unit]
+Description=Add Flathub Verified flatpak repository
+ConditionPathExists=!/var/lib/flatpak/.flathub-repo-verified
+After=network-online.target
+Before=flatpak-replace-fedora-apps.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=-/usr/bin/flatpak --system remote-delete --force flathub-verified
+ExecStartPre=-/usr/bin/flatpak --system remote-delete --force flathub-verified-beta
+ExecStart=/usr/bin/flatpak remote-add --system --if-not-exists --subset=verified --title "Flathub Verified" flathub-verified https://flathub.org/repo/flathub.flatpakrepo
+ExecStart=/usr/bin/flatpak remote-add --system --if-not-exists --subset=verified --disable --title "Flathub Verified Beta" flathub-verified-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
+ExecStartPost=/usr/bin/touch /var/lib/flatpak/.flathub-repo-verified
+
+[Install]
+WantedBy=multi-user.target

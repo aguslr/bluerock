@@ -1,0 +1,22 @@
+[Unit]
+Description=Replace Fedora apps with Flathub ones
+ConditionPathExists=/var/lib/flatpak/.fedora-initialized
+ConditionPathExists=/var/lib/flatpak/.flathub-repo-verified
+ConditionPathExists=!/var/lib/flatpak/.flathub-apps-verified
+After=flatpak-add-flathub-repo.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=-/usr/bin/flatpak --system uninstall --noninteractive org.kde.KStyle.Adwaita
+ExecStart=/bin/sh -c 'flatpak --system install --noninteractive --reinstall flathub-verified $(flatpak --system list --app --columns=application)'
+ExecStartPost=-/usr/bin/flatpak --system uninstall --noninteractive org.fedoraproject.Platform
+ExecStartPost=-/usr/bin/flatpak --system remote-delete --force fedora
+ExecStartPost=-/usr/bin/flatpak --system remote-delete --force fedora-testing
+ExecStartPost=-/usr/bin/flatpak --system remote-delete --force flathub
+ExecStartPost=-/usr/bin/flatpak --system remote-delete --force flathub-beta
+ExecStartPost=/usr/bin/touch /var/lib/flatpak/.flathub-apps-verified
+
+[Install]
+WantedBy=multi-user.target
