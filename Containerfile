@@ -4,7 +4,7 @@ FROM ghcr.io/aguslr/bluefusion:${FEDORA_MAJOR_VERSION}
 
 COPY rootfs/ /
 
-RUN <<-EOT bash
+RUN <<-EOT sh
 	set -eu
 
 	systemctl enable flatpak-update.timer
