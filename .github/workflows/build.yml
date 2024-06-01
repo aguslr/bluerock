@@ -2,7 +2,7 @@ name: Build image
 
 on:
   schedule:
-    - cron: '20 10 * * *'  # 10:20pm everyday
+    - cron: '20 22 * * *'  # 10:20pm everyday
   pull_request:
     branches:
       - main
