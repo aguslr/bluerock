@@ -33,6 +33,7 @@ Features
 
 - Start with a custom Fedora Silverblue image.
 - Set automatic updates for the system.
+- Set automatic updates for [Homebrew][6].
 - Set additional kernel boot parameters.
 - Set additional kernel runtime parameters.
 - Blacklist rarely used kernel modules.
@@ -60,3 +61,4 @@ References
 [3]: https://wiki.archlinux.org/title/Security
 [4]: https://docs.sigstore.dev/cosign/overview/
 [5]: https://blue-build.org/learn/universal-blue/#fresh-install-from-an-iso
+[6]: https://brew.sh/

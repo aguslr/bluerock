@@ -8,6 +8,7 @@ RUN <<-EOT sh
 	set -eu
 
 	systemctl enable flatpak-update.timer
+	systemctl enable homebrew-upgrade.timer
 	systemctl enable rpm-ostree-kargs.service
 
 	rpm-ostree override remove firefox firefox-langpacks --install chromium
