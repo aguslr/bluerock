@@ -1,0 +1,12 @@
+[Unit]
+Description=Upgrade Nix packages
+After=local-fs.target
+After=network-online.target
+ConditionPathExists=/nix/var/nix/profiles/default/bin/nix
+
+[Service]
+User=1000
+Type=oneshot
+ExecStartPre=/nix/var/nix/profiles/default/bin/nix-channel --update
+ExecStart=/nix/var/nix/profiles/default/bin/nix-env -u '*'
+StandardOutput=journal

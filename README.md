@@ -34,6 +34,7 @@ Features
 - Start with a custom Fedora Silverblue image.
 - Set automatic updates for the system.
 - Set automatic updates for [Homebrew][6].
+- Set automatic updates for [Nix][7].
 - Set additional kernel boot parameters.
 - Set additional kernel runtime parameters.
 - Blacklist rarely used kernel modules.
@@ -62,3 +63,4 @@ References
 [4]: https://docs.sigstore.dev/cosign/overview/
 [5]: https://blue-build.org/learn/universal-blue/#fresh-install-from-an-iso
 [6]: https://brew.sh/
+[7]: https://nixos.org/
