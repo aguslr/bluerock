@@ -24,7 +24,7 @@ the following command:
         --security-opt label=disable --pull=newer \
         ghcr.io/jasonn3/build-container-installer:latest \
         IMAGE_REPO="ghcr.io/aguslr" \
-        IMAGE_NAME="bluefusion" \
+        IMAGE_NAME="bluerock" \
         IMAGE_TAG="latest" \
         VARIANT="Silverblue"
 
@@ -33,6 +33,7 @@ Features
 
 - Start with a custom Fedora Silverblue image.
 - Set automatic updates for the system.
+- Set automatic updates for Flatpaks.
 - Set automatic updates for [Homebrew][6].
 - Set automatic updates for [Nix][7].
 - Set additional kernel boot parameters.
