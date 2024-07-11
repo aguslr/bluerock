@@ -39,7 +39,7 @@ Features
 - Set additional kernel boot parameters.
 - Set additional kernel runtime parameters.
 - Blacklist rarely used kernel modules.
-- Replace Firefox with Chromium.
+- Install Chromium.
 - Allow only verified Flathub apps.
 
 Verification

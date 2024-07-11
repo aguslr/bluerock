@@ -12,7 +12,7 @@ RUN <<-EOT sh
 	systemctl enable nix-upgrade.timer
 	systemctl enable rpm-ostree-kargs.service
 
-	rpm-ostree override remove firefox firefox-langpacks --install chromium
+	rpm-ostree install chromium
 	rpm-ostree install haveged && systemctl enable haveged.service
 
 	rpm-ostree cleanup -m && ostree container commit
