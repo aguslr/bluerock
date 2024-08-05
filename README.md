@@ -10,11 +10,11 @@ Usage
 
 1. Rebase to an unsigned image to get proper signing keys:
 
-       rpm-ostree rebase ostree-unverified-registry:ghcr.io/aguslr/bluerock:latest && systemctl reboot
+       rpm-ostree rebase -r ostree-unverified-registry:ghcr.io/aguslr/bluerock:stable
 
 2. Rebase to a signed image to finish the installation:
 
-       rpm-ostree rebase ostree-image-signed:docker://ghcr.io/aguslr/bluerock:latest && systemctl reboot
+       rpm-ostree rebase -r ostree-image-signed:docker://ghcr.io/aguslr/bluerock:stable
 
 Alternatively, an [ISO file for offline installation][5] can be generated with
 the following command:
