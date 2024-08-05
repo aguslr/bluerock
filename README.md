@@ -31,7 +31,29 @@ the following command:
 Features
 --------
 
-- Start with a custom Fedora Silverblue image.
+From [BlueVanilla][8]:
+
+- Start with a base Fedora Silverblue image.
+- Add the `gnome-tweaks` package.
+- Restore GNOME's default background.
+- Replace Fedora repository with unfiltered Flathub repository.
+- Replace Fedora's Flatpaks with the ones from Flathub.
+- Remove unused Flatpak dependencies automatically.
+- Set automatic checking of updates for the system.
+- Reduce *systemd* shutdown timers.
+
+From [BlueFusion][9]:
+
+- Install [Homebrew][10] on `x86_64`.
+- Install [Nix][11].
+- Replace [Toolbox][12] with [Distrobox][3].
+- Add RPM Fusion repositories and several multimedia packages.
+- Add keyboard shortcuts:
+  + Open Terminal into the system's shell: `<Control><Alt>t`
+  + Open Terminal into the default Distrobox container: `<Super>Return`
+
+Additional features:
+
 - Set automatic updates for the system.
 - Set automatic updates for Flatpaks.
 - Set automatic updates for [Homebrew][6].
@@ -41,6 +63,11 @@ Features
 - Blacklist rarely used kernel modules.
 - Install Chromium.
 - Allow only verified Flathub apps.
+
+To disable **Homebrew** and **Nix**, mask the mounts by running:
+
+    sudo systemctl mask nix.mount
+    sudo systemctl mask var-home-linuxbrew.mount
 
 Verification
 ------------
@@ -58,10 +85,15 @@ References
 - [Security - ArchWiki][3]
 
 
-[1]: https://github.com/aguslr/bluerock
-[2]: https://madaidans-insecurities.github.io/guides/linux-hardening.html
-[3]: https://wiki.archlinux.org/title/Security
-[4]: https://docs.sigstore.dev/cosign/overview/
-[5]: https://blue-build.org/learn/universal-blue/#fresh-install-from-an-iso
-[6]: https://brew.sh/
-[7]: https://nixos.org/
+[1]:  https://github.com/aguslr/bluerock
+[2]:  https://madaidans-insecurities.github.io/guides/linux-hardening.html
+[3]:  https://wiki.archlinux.org/title/Security
+[4]:  https://docs.sigstore.dev/cosign/overview/
+[5]:  https://blue-build.org/learn/universal-blue/#fresh-install-from-an-iso
+[6]:  https://brew.sh/
+[7]:  https://nixos.org/
+[8]:  https://github.com/aguslr/bluevanilla
+[9]:  https://github.com/aguslr/bluefusion
+[10]: https://brew.sh/
+[11]: https://nixos.org/download/
+[12]: https://github.com/containers/toolbox
