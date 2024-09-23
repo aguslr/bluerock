@@ -5,6 +5,7 @@ Documentation=man:flatpak-update(1)
 [Timer]
 OnBootSec=5m
 OnUnitActiveSec=8h
+Persistent=true
 
 [Install]
 WantedBy=timers.target
